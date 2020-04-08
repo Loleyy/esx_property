@@ -221,7 +221,6 @@ RegisterNetEvent('esx_property:getItem')
 AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xPlayerOwner = ESX.GetPlayerFromIdentifier(owner)
-
 	if type == 'item_standard' then
 		TriggerEvent('esx_addoninventory:getInventory', 'property', xPlayerOwner.identifier, function(inventory)
 			local inventoryItem = inventory.getItem(item)
@@ -249,20 +248,48 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 				xPlayer.showNotification(_U('amount_invalid'))
 			end
 		end)
-	elseif type == 'item_weapon' then
-		TriggerEvent('esx_datastore:getDataStore', 'property', xPlayerOwner.identifier, function(store)
-			local storeWeapons = store.get('weapons') or {}
-			local weapon = storeWeapons[data.current.count] -- count is the index
 
-			if weapon then
-				if not xPlayer.hasWeapon(weaponName) then
-					table.remove(storeWeapons, data.current.count)
-					store.set('weapons', storeWeapons)
+		elseif type == 'item_weapon' then
 
-					xPlayer.addWeapon(weapon.name, weapon.ammo)
-				end
-			end
-		end)
+        TriggerEvent('esx_datastore:getDataStore', 'property', xPlayerOwner.identifier, function(store)
+            --[[local storeWeapons = store.get('weapons') or {}
+            local weaponName   = nil
+            local ammo         = nil
+
+            for i=1, #storeWeapons, 1 do
+                if storeWeapons[i].name == item then
+                    weaponName = storeWeapons[i].name
+                    ammo       = storeWeapons[i].ammo
+
+                    table.remove(storeWeapons, i)
+                    break
+                end
+            end
+
+            store.set('weapons', storeWeapons)
+            xPlayer.addWeapon(weaponName, ammo)
+        end)
+
+    end
+end)]]
+            local storeWeapons = store.get('weapons') or {}
+            local weapon = false 
+            
+            for k,v in pairs(storeWeapons) do
+                if not xPlayer.hasWeapon(v.name) then
+                    weaponName = v.name
+                    ammo = v.ammo
+                    table.remove(storeWeapons, k)
+                    weapon = true 
+                end
+                break
+            end
+            
+            if weapon then 
+                store.set('weapons', storeWeapons)
+                xPlayer.addWeapon(weaponName, ammo)
+            end
+        end)
 	end
 end)
 
