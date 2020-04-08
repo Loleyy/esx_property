@@ -252,26 +252,7 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 		elseif type == 'item_weapon' then
 
         TriggerEvent('esx_datastore:getDataStore', 'property', xPlayerOwner.identifier, function(store)
-            --[[local storeWeapons = store.get('weapons') or {}
-            local weaponName   = nil
-            local ammo         = nil
-
-            for i=1, #storeWeapons, 1 do
-                if storeWeapons[i].name == item then
-                    weaponName = storeWeapons[i].name
-                    ammo       = storeWeapons[i].ammo
-
-                    table.remove(storeWeapons, i)
-                    break
-                end
-            end
-
-            store.set('weapons', storeWeapons)
-            xPlayer.addWeapon(weaponName, ammo)
-        end)
-
-    end
-end)]]
+					
             local storeWeapons = store.get('weapons') or {}
             local weapon = false 
             
