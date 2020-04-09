@@ -257,18 +257,20 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
             local weapon = false 
             
             for k,v in pairs(storeWeapons) do
-                if not xPlayer.hasWeapon(v.name) then
+                if v.name == item then
                     weaponName = v.name
                     ammo = v.ammo
                     table.remove(storeWeapons, k)
                     weapon = true 
+                    break
                 end
-                break
             end
             
             if weapon then 
-                store.set('weapons', storeWeapons)
-                xPlayer.addWeapon(weaponName, ammo)
+                if not xPlayer.hasWeapon(weaponName) then 
+                    store.set('weapons', storeWeapons)
+                    xPlayer.addWeapon(weaponName, ammo)
+                end
             end
         end)
 	end
